@@ -39,7 +39,7 @@ call :CheckOrSetEnvVar IMAGE "enshrouded-server-testing"
 echo "evaluating run env vars..."
 @REM provide the user some configuration options for the container run
 call :CheckOrSetEnvVar CONTAINER_NAME "enshrouded-test"
-call :CheckOrSetEnvVar FILE_MOUNT "./temp:/home/steam/enshrouded/savegame"
+call :CheckOrSetEnvVar FILE_MOUNT ".\temp\savegame:/home/steam/enshrouded/savegame"
 call :CheckOrSetEnvVar SERVER_NAME "Enshrouded Containerized Server"
 call :CheckOrSetEnvVar SERVER_SLOTS "16"
 call :CheckOrSetEnvVar SERVER_PASSWORD "ChangeThisPlease"
