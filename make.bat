@@ -79,7 +79,13 @@ if /i "%1%"=="full" (
     docker build --progress=plain -f ./container/Containerfile --no-cache -t %IMAGE_REF%  ./container/
 ) else if /i "%1%"=="push" (
     echo Push the project...
-    docker push %IMAGE_REF%
+    docker push !IMAGE_REF!
+    if /i "%2%"=="latest" (
+        call :SetImagePath latest
+        docker tag !IMAGE_REF! !IMAGE_REF_LATEST!
+        echo Pushing latest tag...
+        docker push !IMAGE_REF_LATEST!
+    )
 ) else if /i "%1%"=="run" (
     echo Run the project...
     call :CheckForImage !IMAGE_REF!
@@ -99,10 +105,19 @@ IF %REGISTRY%=="" (
     echo %PROJECT%/%IMAGE%:%TAG%
     @REM this is a docker hub image so drop the registry prefix
     set IMAGE_REF=%PROJECT%/%IMAGE%:%TAG%
+    IF "%~1"=="latest" (
+        set IMAGE_REF_LATEST=%PROJECT%/%IMAGE%:latest
+        echo "latest tag found, setting IMAGE_REF_LATEST to: !IMAGE_REF_LATEST!"
+    )
     echo Docker Hub Image For IMAGE_REF: !IMAGE_REF!
 ) ELSE (
     @REM this is a private registry image so include the registry prefix
     set IMAGE_REF=%REGISTRY%/%PROJECT%/%IMAGE%:%TAG%
+    IF "%~1"=="latest" (
+        set IMAGE_REF_LATEST=%REGISTRY%/%PROJECT%/%IMAGE%:latest
+        echo "latest tag found, setting IMAGE_REF_LATEST to: !IMAGE_REF_LATEST!"
+    )
+
     echo Private Image for IMAGE_REF: !IMAGE_REF!
 )
 goto :eof
