@@ -46,4 +46,4 @@ RUN mkdir -p "/home/steam/steamcmd" \
 
 WORKDIR /home/steam
 
-CMD ["/home/steam/entrypoint.sh"]
+CMD ["bash", "/home/steam/entrypoint.sh"]
