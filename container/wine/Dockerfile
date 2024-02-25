@@ -1,4 +1,4 @@
-FROM debian:12
+FROM debian:12-slim
 
 ARG CONTAINER_GID=10000
 ARG CONTAINER_UID=10000
@@ -13,7 +13,7 @@ RUN groupadd -g $CONTAINER_GID steam \
     && useradd -g $CONTAINER_GID -u $CONTAINER_UID -m steam \
     && dpkg --add-architecture i386 \
     && apt-get update \
-    && apt-get install -y \
+    && apt-get install --no-install-recommends -y \
         ca-certificates \
         curl \
         wget \
@@ -28,7 +28,11 @@ RUN groupadd -g $CONTAINER_GID steam \
     && apt-get update \
     && apt-get install -y --install-recommends winehq-stable \
     && wget -O /usr/local/bin/winetricks https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks \
-    && chmod +x /usr/local/bin/winetricks
+    && chmod +x /usr/local/bin/winetricks \
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get clean \
+    && apt-get autoremove -y 
+
 
 USER steam
 
